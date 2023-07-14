@@ -1,19 +1,5 @@
-// const http = require('http')
-
-// const hostname = 'localhost'
-// const port = 3000
-
-// const server = http.createServer((req, res) => {
-//   res.statusCode = 200
-//   res.setHeader('Content-Type', 'text/plain')
-//   res.end('Hello World<br>'+process.argv)
-// })
-
-// server.listen(port, hostname, () => {
-//   console.log(`Server running at http://${hostname}:${port}/`)
-// })
-
 const http      = require('http')
+const path      = require('path')
 const express   = require('express')
 const app       = express()
 const roles     = ['CLIENT', 'TARGET', 'DC']
@@ -27,8 +13,17 @@ const role      = (() => {
 })()
 const port      = 3000+roles.indexOf(role)
 
+app.use(express.static(__dirname + '/public'));
+
+
+
 app.get('/', (req, res) => {
-    res.send('Hello world, this is Express!')
+    if (role === 'CLIENT')
+        res.sendFile('public/html/client.html', { root: __dirname })
+    else if (role === 'TARGET')
+        res.sendFile('public/html/target.html', { root: __dirname })
+    else if (role === 'DC')
+        res.sendFile('public/html/dc.html', { root: __dirname })
 })
 
 app.listen(port, () => {
